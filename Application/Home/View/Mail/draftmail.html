@@ -1,0 +1,99 @@
+<include file="Static/min-header"/>
+<div class="wrapper">
+    <include file="Static/breadcrumb"/>
+  <section class="content">
+       <div class="row">
+          <div class="col-xs-12">
+            <div class="box">
+              <div class="box-header">
+                  <nav class="navbar navbar-default">      
+                <div class="collapse navbar-collapse">
+                  <form class="navbar-form form-inline" action="" method="post">
+                    <button type="button" class="btn btn-default" onclick="dealmail(1)">删除</button>
+                    <button type="button" class="btn btn-default" onclick="dealmail(2)">转发</button>     
+                  </form>   
+                </div>
+            </nav>               
+               </div>     
+               <!-- /.box-header -->
+               <div class="box-body">              
+                <div class="row">
+                <div class="col-sm-12">
+                  <table id="list-table" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info" style="text-align: center;">
+                     <thead>
+                       <tr role="row" align="center">
+                         <td width="4%"><b><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);"></b></td>
+               
+                         <td width="6%"><b>收件人</b></td>
+                         <td><b>标题</b></td>
+                         <td><b>内容</b></td>
+                         <td width="14%"><b>发送时间</b></td>
+              
+                       </tr>
+                     </thead>
+            <tbody>
+              <foreach name="list" item="vo" key="k" >
+                <tr role="row">
+                         <td><input type="checkbox" name="selected[]" value="{$vo.id}" id="ids"></td>
+                         <td><a href="javascript:;" title="{$vo.to|getcutstr=0}">{$vo.to|getcutstr=1}</a></td>
+                         <td><a href="javascript:;" onclick="showall('{$vo.title}','邮件标题')">{$vo.title|getsubstr=0,10}</a></td>
+                         <td><a href="javascript:;" onclick="showall('{$vo.content}','邮件内容')">{$vo.content|getsubstr=0,10}</a></td>
+                         <td>{$vo.create_time|date="Y-m-d H:i:s",###}</td>
+                        </tr>
+                      </foreach>
+                       </tbody>
+                     <tfoot>
+                     
+                     </tfoot>
+                   </table>
+                 </div>
+            </div>
+              <div class="row">
+                    <div class="col-sm-6 text-left"></div>
+                    <div class="col-sm-6 text-right">{$page}</div>    
+              </div>
+            </div><!-- /.box-body -->
+          </div><!-- /.box -->
+        </div>
+       </div>
+   </section>
+</div>
+<script>
+
+function showall(info,title){
+  layer.alert(info,{title:title});
+}
+
+function dealmail(type){
+	var selected = $('input[name*="selected"]:checked');
+    var selected_id = [];
+    if(selected.length < 1){
+		layer.msg('请选择邮件', {icon: 1,time: 1000}); 
+        return;
+    }
+    $(selected).each(function(){
+        selected_id.push($(this).val());
+    });
+    if(type==1){
+    $.ajax({
+        type:'POST',
+        url:"{:U('Mail/dealmail')}",
+        data:{ids:selected_id,type:type},
+        dataType:'json',
+        success:function(data){
+            layer.alert(data.msg, {icon: 1}); 
+            window.location.href = "{:U('Home/Mail/draftmail')}";               
+        }
+    }); 
+    }else{
+    	if(selected.length >1){
+			layer.msg('请选择一封邮件', {icon: 1,time: 1000});
+        	return;
+    	}
+    	window.location.href = "/index.php?m=Home&c=Mail&a=sendemail&id="+selected_id; 
+    } 
+}
+    
+</script>
+</body>
+</html>

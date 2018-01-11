@@ -1,0 +1,60 @@
+<include file="Static/min-header"/>
+<div class="wrapper">
+    <include file="Static/breadcrumb"/>
+  <section class="content">
+       <div class="row">
+          <div class="col-xs-12">
+            <div class="box">
+              <div class="box-header">  
+              <div class="form-group pull-right">
+                      <a href="{:U('Manager/userhandle')}" class="btn btn-primary pull-right"><i class="fa fa-plus"></i>新增用户</a>
+                    </div>            
+               </div>     
+               <!-- /.box-header -->
+               <div class="box-body">              
+                <div class="row">
+                <div class="col-sm-12">
+                  <table id="list-table" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info" style="text-align: center;">
+                     <thead>
+                       <tr role="row" align="center">
+            
+                         <td width="6%"><b>用户名</b></td>
+                         <td><b>所属角色</b></td>
+                      
+                         <td width="14%"><b>加入时间</b></td>
+                         <td width="9%"><b>操作</b></td>
+                       </tr>
+                     </thead>
+            <tbody>
+              <foreach name="list" item="vo" key="k" >
+                <tr role="row">
+                  
+                         <td>{$vo.name}</td>
+                         <td>{$vo.role_name}</td>
+                       
+                         <td>{$vo.create_time|date="Y-m-d H:i:s",###}</td>
+                         <td>
+                         <a class="btn btn-primary" href="{:U('Manager/userhandle',array('user_id'=>$vo['id']))}"><i class="fa fa-pencil"></i></a>
+                          <a class="btn btn-danger" href="javascript:void(0)" data-url="{:U('Manager/userhandle')}" data-id="{$vo.id}" onclick="delfun(this)"><i class="fa fa-trash-o"></i></a>
+                             
+                </td>
+                        </tr>
+                      </foreach>
+                       </tbody>
+                     <tfoot>
+                     
+                     </tfoot>
+                   </table>
+                 </div>
+            </div>
+            </div><!-- /.box-body -->
+          </div><!-- /.box -->
+        </div>
+       </div>
+   </section>
+</div>
+<script>
+
+</script>
+</body>
+</html>

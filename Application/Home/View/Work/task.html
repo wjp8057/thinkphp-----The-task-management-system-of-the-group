@@ -1,0 +1,107 @@
+<include file="Static/min-header"/>
+<div class="wrapper">
+    <include file="Static/breadcrumb"/>
+  <section class="content">
+       <div class="row">
+          <div class="col-xs-12">
+            <div class="box">
+              <div class="box-header">
+                  <nav class="navbar navbar-default">      
+                <div class="collapse navbar-collapse">
+                  <form class="navbar-form form-inline" action="{:U('Work/worklist')}" method="post">
+                    <div class="form-group">
+                        <input type="text" name="rangetime" class="form-control" placeholder="时间" id="rangetime" value="{$time}">
+                    </div>
+                    <div class="form-group">
+                        <select name="username" class="form-control" style="width:200px;">
+                          <option value="">选择姓名</option>
+                          <foreach name="userlist" item="vo">
+                          <option value="{$vo.name}" <if condition="$vo[name] eq $username">selected</if>>{$vo.name}</option>
+                          </foreach>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-default">搜索</button>
+                    <div class="form-group pull-right">
+                      <a href="{:U('Work/handletask')}" class="btn btn-primary pull-right"><i class="fa fa-plus"></i>新增任务</a>
+                    </div>      
+                  </form>   
+                </div>
+            </nav>               
+               </div>     
+               <!-- /.box-header -->
+               <div class="box-body">              
+                <div class="row">
+                <div class="col-sm-12">
+                  <table id="list-table" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info" style="text-align: center;">
+                     <thead>
+                       <tr role="row" align="center">
+                         <td width="4%"><b>ID</b></td>
+                         <td width="15%"><b>任务名称</b></td>
+                         <td><b>任务详情</b></td>
+                         <td width="10%"><b>任务完成人</b></td>
+                         <td width="10%"><b>任务状态</b></td>
+                         <td width="14%"><b>任务截止时间</b></td>
+                         <td width="14%"><b>发布时间</b></td>
+                         <if condition="$userid lt 3"><td width="9%"><b>操作</b></td></if>
+                       </tr>
+                       </tr>
+                     </thead>
+            <tbody>
+              <foreach name="list" item="vo" key="k" >
+                <tr role="row">
+                         <td>{$vo.id}</td>
+                         
+                         <td><a href="javascript:;" onclick="showall('{$vo.title}','任务名称')">{$vo.title|getsubstr=0,10}</a></td>
+                         <td><a href="javascript:;" onclick="showall('{$vo.content}','任务详情')">{$vo.content|getsubstr=0,10}</a></td>
+                         <td>{$vo.user_name}</td>
+                         <td>{$vo._status}</td>
+                         <td>{$vo.expected_time|date="Y-m-d H:i:s",###}</td>
+                         <td>{$vo.create_time|date="Y-m-d H:i:s",###}</td>
+                         <if condition="$userid lt 3">
+                         <td>
+
+                          <a class="btn btn-danger" href="javascript:void(0)" data-url="{:U('Work/handletask')}" data-id="{$vo.id}" onclick="delfun(this)"><i class="fa fa-trash-o"></i></a>
+                          <a class="btn btn-primary" href="{:U('Work/handletask',array('id'=>$vo['id']))}"><i class="fa fa-pencil"></i></a>
+                          </td>
+                          </if>
+                        </tr>
+                      </foreach>
+                       </tbody>
+                     <tfoot>
+                     
+                     </tfoot>
+                   </table>
+                 </div>
+            </div>
+              <div class="row">
+                    <div class="col-sm-6 text-left"></div>
+                    <div class="col-sm-6 text-right">{$page}</div>    
+              </div>
+            </div><!-- /.box-body -->
+          </div><!-- /.box -->
+        </div>
+       </div>
+   </section>
+</div>
+<script>
+laydate.render({
+  elem: '#rangetime'
+  ,range: '~'
+});
+
+function showall(info,title){
+  layer.alert(info,{title:title});
+}
+
+
+ 
+function updatetime(){
+laydate.render({
+  elem: '#updatetime'
+  ,range: '~'
+});
+}
+
+</script>
+</body>
+</html>

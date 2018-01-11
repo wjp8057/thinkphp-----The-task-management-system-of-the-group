@@ -1,0 +1,145 @@
+<include file="Static/min-header"/>
+<div class="wrapper">
+    <include file="Static/breadcrumb"/>
+  <section class="content">
+       <div class="row">
+          <div class="col-xs-12">
+            <div class="box">
+               
+               <!-- /.box-header -->
+               <div class="box-body">              
+                <div class="row">
+                <div class="col-sm-12">
+                  <table id="list-table" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info" style="text-align: center;">
+                     <thead>
+                       <tr role="row" align="center">
+                         <td width="8%"><b>任务id</b></td>
+                         <td width="8%"><b>完成人</b></td>
+                         <td width="15%"><b>任务名称</b></td>
+                         <td><b>任务情况</b></td>
+                         <td width="8%"><b>任务状态</b></td>
+                         <td width="4%"><b>操作</b></td>
+                       </tr>
+                     </thead>
+            <tbody>
+              <foreach name="list" item="vo" key="k" >
+                <tr role="row">
+                         <td>{$vo.id}</td>
+                         <td>{$vo.user_name}</td>
+                         <td><a href="javascript:;" onclick="showall('{$vo.title}','任务名称')">{$vo.title|getsubstr=0,9}</a></td>
+                         <td>
+<if condition="$vo.width gt 90">                    
+<div class="progress" onclick="showtime({$vo.create_time},{$vo.expected_time},'st{$vo.id}')" id='st{$vo.id}'>
+    <div class="progress-bar progress-bar-danger" role="progressbar"
+         aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+         style="width: {$vo['width']}%;">
+        <span class="sr-only"></span>
+    </div>
+</div>
+<elseif condition="$vo.width elt 90 and $vo.width gt 60"/>
+<div class="progress" onclick="showtime({$vo.create_time},{$vo.expected_time},'st{$vo.id}')" id='st{$vo.id}'>
+    <div class="progress-bar progress-bar-warning" role="progressbar"
+         aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+         style="width: {$vo['width']}%;">
+        <span class="sr-only"></span>
+    </div>
+</div>
+<elseif condition="$vo.width elt 60 and $vo.width gt 20"/>
+<div class="progress" onclick="showtime({$vo.create_time},{$vo.expected_time},'st{$vo.id}')" id='st{$vo.id}'>
+    <div class="progress-bar progress-bar-info" role="progressbar"
+         aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+         style="width: {$vo['width']}%;">
+        <span class="sr-only"></span>
+    </div>
+</div>
+<else />
+<div class="progress" onclick="showtime({$vo.create_time},{$vo.expected_time},'st{$vo.id}')" id='st{$vo.id}'>
+    <div class="progress-bar progress-bar-success" role="progressbar"
+         aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+         style="width: {$vo['width']}%;">
+        <span class="sr-only"></span>
+    </div>
+</div>
+</if>
+                         </td> 
+                         <td>{$vo._status}</td>        
+                         <td>
+                          <a class="btn btn-primary" href="javascript:;" onclick="updatestatus({$vo['id']})"><i class="fa fa-pencil"></i></a>
+                         </td>
+                        </tr>
+                      </foreach>
+                       </tbody>
+                     <tfoot>
+                     
+                     </tfoot>
+                   </table>
+                 </div>
+            </div>
+              <div class="row">
+                    <div class="col-sm-6 text-left"></div>
+                    <div class="col-sm-6 text-right">{$page}</div>    
+              </div>
+            </div><!-- /.box-body -->
+          </div><!-- /.box -->
+        </div>
+       </div>
+   </section>
+</div>
+<script>
+function updatestatus(id){
+    layer.open({
+        content: '修改任务状态',
+        title: '',
+        btn: ['未解决', '正在解决', '已解决'],
+        yes: function(index, layero) {
+            ajaxsub(0,id);
+            layer.closeAll();
+            window.location.href = "{:U('Home/Work/status')}"; 
+         
+        },
+        btn2: function(index, layero) {
+            ajaxsub(1,id);
+            layer.closeAll();
+            window.location.href = "{:U('Home/Work/status')}";
+           
+        },
+        btn3: function(index, layero) {
+            ajaxsub(2,id);
+            layer.closeAll();
+            window.location.href = "{:U('Home/Work/status')}";
+            
+        },
+        cancel: function() {
+            layer.closeAll();
+        }
+    });
+}
+function ajaxsub(status,id){
+    $.ajax({
+        type:'POST',
+        url:"{:U('Work/updatestatus')}",
+        data:{status:status,id:id},
+        dataType:'json',
+        success:function(data){
+            layer.msg(data.msg, {icon: 1});                
+        }
+    });
+}
+function showtime(t1,t2,id){
+  var msg = '任务创建时间为'+getLocalTime(t1)+',截止时间为'+getLocalTime(t2);
+  layer.tips(msg, '#'+id, {
+    tips: [1, '#0FA6D8'],
+    time: 3500
+  });
+}
+function getLocalTime(nS) {     
+   return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');     
+}  
+function showall(info,title){
+  layer.alert(info,{title:title});
+}
+
+
+</script>
+</body>
+</html>

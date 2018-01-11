@@ -1,0 +1,23 @@
+<aside class="main-sidebar" style="overflow-y:auto;">
+      <section class="sidebar">
+
+        <ul class="sidebar-menu"> 
+	      <foreach name="list" item="vo" key="k" >
+	      	<notempty name="vo.sub_menu">
+        	<li class="treeview">
+        	    <a href="javascript:void(0)">
+	              <i class="fa {$vo.icon}"></i><span>{$vo.name}</span><i class="fa fa-angle-left pull-right"></i>
+	            </a>
+	            <ul class="treeview-menu">
+	            	<foreach name="vo.sub_menu" item="vv" key="kk">
+	            	<li onclick="makecss(this)" data-id="{$vv.act}_{$vv.control}">
+	            		<a href='{:U("$vv[control]/$vv[act]")}' target='rightContent'><i class="fa fa-circle-o"></i>{$vv.name}</a>
+	            	</li>
+	            	</foreach>
+	            </ul>
+        	</li>
+        	</notempty>
+	      </foreach>     
+        </ul>
+      </section>
+</aside>

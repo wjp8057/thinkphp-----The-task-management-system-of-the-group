@@ -1,0 +1,97 @@
+<include file="Static/min-header"/>
+<div class="wrapper">
+    <include file="Static/breadcrumb"/>
+  <section class="content">
+       <div class="row">
+          <div class="col-xs-12">
+            <div class="box">
+              <div class="box-header">
+                  <nav class="navbar navbar-default">      
+                <div class="collapse navbar-collapse">
+                  <form class="navbar-form form-inline" action="{:U('Info/index')}" method="post">
+                    <div class="form-group">
+                        <input type="text" name="rangetime" class="form-control" placeholder="时间" id="rangetime" value="{$time}">
+                    </div>
+   
+                    <button type="submit" class="btn btn-default">搜索</button>
+                    <div class="form-group pull-right">
+                      <a href="{:U('Work/handletask')}" class="btn btn-primary pull-right"><i class="fa fa-plus"></i>新增任务</a>
+                    </div>      
+                  </form>   
+                </div>
+            </nav>               
+               </div>     
+               <!-- /.box-header -->
+               <div class="box-body">              
+                <div class="row">
+                <div class="col-sm-12">
+                  <table id="list-table" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info" style="text-align: center;">
+                     <thead>
+                       <tr role="row" align="center">
+                         <td width="4%"><b>ID</b></td>
+                         <td width="8%"><b>是否阅读</b></td>
+                         <td><b>信息</b></td>
+                         <td width="15%"><b>发送人</b></td>
+                         <td width="15%"><b>发送时间</b></td>
+                         <td width="4%"><b>操作</b></td>
+                       </tr>
+                     </thead>
+            <tbody>
+              <foreach name="list" item="vo" key="k" >
+                <tr role="row" onclick="read({$vo.id},{$vo.type})">
+                         <td>{$vo.id}</td>
+                         <td>
+<img width="20" height="20" src="__PUBLIC__/images/<if condition='$vo[is_read] eq 1'>1.png<else />0.png</if>"/>
+                         </td>
+                         <td>{$vo.msg}</td>
+                  
+                         <td>{$userlist[$vo['from']]}</td>
+              
+                         <td>{$vo.addtime|date="Y-m-d H:i:s",###}</td>
+                         <td>
+
+                          <a class="btn btn-danger" href="javascript:void(0)" data-url="{:U('Work/handletask')}" data-id="{$vo.id}" onclick="delfun(this)"><i class="fa fa-trash-o"></i></a>   
+                        </td>
+                        </tr>
+                      </foreach>
+                       </tbody>
+                     <tfoot>
+                     
+                     </tfoot>
+                   </table>
+                 </div>
+            </div>
+              <div class="row">
+                    <div class="col-sm-6 text-left"></div>
+                    <div class="col-sm-6 text-right">{$page}</div>    
+              </div>
+            </div><!-- /.box-body -->
+          </div><!-- /.box -->
+        </div>
+       </div>
+   </section>
+</div>
+<script>
+laydate.render({
+  elem: '#rangetime'
+  ,range: '~'
+});
+
+function showall(info,title){
+  layer.alert(info,{title:title});
+}
+function read(id,type){
+    $.ajax({
+        type:'POST',
+        url:"{:U('Info/updateread')}",
+        data:{id:id},
+        dataType:'json',
+        success:function(data){
+          if(type==2)window.location.href = "{:U('Home/Work/status')}";  
+          else window.location.href = "{:U('Home/Info/index')}";             
+        }
+    }); 
+}
+</script>
+</body>
+</html>

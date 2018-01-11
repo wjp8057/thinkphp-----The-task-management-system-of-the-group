@@ -1,0 +1,67 @@
+<include file="Static/min-header"/>
+<script src="__PUBLIC__/js/echarts.common.min.js"></script>
+<div class="wrapper">
+    <include file="Static/breadcrumb"/>
+  <section class="content">
+       <div class="row">
+          <div class="col-xs-12">
+            <div class="box">   
+               <!-- /.box-header -->
+               <div class="box-body">              
+                <div class="row">
+                <div class="col-sm-12">
+                  <table id="list-table" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info" style="text-align: center;">
+                     <thead>
+                       <tr role="row" align="center">
+                         <td><div id="main" style="width: 600px;height:400px;text-align: center;"></div></td>
+                       </tr>
+                     </thead>
+            </div>
+            </div><!-- /.box-body -->
+          </div><!-- /.box -->
+        </div>
+       </div>
+   </section>
+</div>     
+<script>
+var name1 = {$names};
+var data1 = {$data};
+var myChart = echarts.init(document.getElementById('main'));
+option = {
+    title : {
+        text: '工作统计',
+        subtext: ''
+    },
+    tooltip : {
+        trigger: 'axis'
+    },
+    legend: {
+        data:name1
+    },
+    toolbox: {
+        show : true,
+        feature : {
+            dataView : {show: true, readOnly: false},
+            magicType : {show: true, type: ['line', 'bar']},
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    xAxis : [
+        {
+            type : 'category',
+            data : name1
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value'
+        }
+    ],
+    series : data1
+};
+myChart.setOption(option);
+</script>
+</body>
+</html>

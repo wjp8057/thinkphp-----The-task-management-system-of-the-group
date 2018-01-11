@@ -1,0 +1,84 @@
+    <include file="Static/min-header"/>
+    <div class="wrapper">
+        <include file="Static/breadcrumb"/>
+    	<section class="content">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="box">
+                            <!-- /.box-header -->
+                            <form action="{:U('Mail/sendemail')}" method="post" class="form-horizontal" id="sendmailform">
+                            <div class="box-body">                         
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-2">收件人</label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" style="width:440px" name="user" value="{$info['_to']}">
+                                        </div>
+
+                                        <div class="col-sm-4" style="margin-top: 8px;"><span class="help-inline text-warning" style=""></span></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-2">标题</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" style="width:440px" name="title" value="{$info['title']}">
+                                        </div>
+                                        <div class="col-sm-4"><span class="help-inline text-warning"></span></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-2">内容</label>
+                                        <div class="col-sm-4">
+                                            <textarea name="content" rows="10" cols="60" id="content">{$info['content']}</textarea>
+                                        </div>
+                                      
+                                    </div>
+                            
+
+                            </div>
+                            <div class="box-footer">
+                            	
+                            	<button type="button" class="btn btn-primary" onclick="savemail()"><i class="icon-ok"></i>存草稿</button>                       	                 
+                                <button type="button" class="btn btn-primary" onclick="checkform(1)"><i class="icon-ok"></i>发送</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+    </div> 
+    <script type="text/javascript">
+    laydate.render({
+      elem: '#expecttime'
+      ,theme: '#393D49'
+      ,type: 'datetime'
+    });
+    var flag=true;
+    function checkform($send=''){
+        var user = $("input[name='user']").val();
+        var title = $("input[name='user']").val();
+        var content = $("#content").val();
+        if(title==''){layer.alert('标题不能为空！');flag=false;return;}
+        if(content==''){layer.alert('内容不能为空！');flag=false;return;}
+        if(user==''){layer.alert('收件人不能为空！');flag=false;return;}
+        if($send)$("#sendmailform").submit();
+    }
+
+    function savemail(){
+    checkform();
+    if(flag){
+    $.ajax({
+        type : "post",
+        data : $('#sendmailform').serialize(),
+        dataType : 'json',
+        url : "{:U('Mail/savemail')}",
+        success : function(res){
+            if(res.status==1){
+                layer.msg(res.msg, {icon: 1});
+            }else{
+                layer.msg(res.msg, {icon: 2,time: 2000});
+            }
+        }
+    });
+    }
+    }
+    </script> 
+    </body>
+    </html>

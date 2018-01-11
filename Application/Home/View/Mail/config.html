@@ -1,0 +1,122 @@
+    <include file="Static/min-header"/>
+    <div class="wrapper">
+        <include file="Static/breadcrumb"/>
+    	<section class="content">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="box">
+                            <div class="box-header">
+                                <h3 class="box-title">邮箱配置</h3>
+                            </div>
+                            <!-- /.box-header -->
+                            <form action="{:U('Mail/config')}" method="post" class="form-horizontal" id="mailform">
+                            <div class="box-body">                         
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-2">邮件发送服务器(SMTP)</label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" style="width:200px" name="smtp_server" value="{$info.smtp_server}">
+                                        </div>
+                                        <div class="col-sm-4"><span class="help-inline text-warning"></span></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-2">服务器(SMTP)端口</label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" style="width:200px" name="smtp_port" value="{$info.smtp_port}">
+                                        </div>
+                                        <div class="col-sm-4"><span class="help-inline text-warning"></span></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-2">邮箱账号</label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" style="width:200px" name="smtp_user" value="{$info.smtp_user}">
+                                        
+                                        </div>
+                                        <div class="col-sm-4"><span class="help-inline text-warning"></span></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-2">邮箱密码</label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" style="width:200px" name="smtp_pwd" value="{$info.smtp_pwd}">
+                                        </div>
+                                        <div class="col-sm-4"><span class="help-inline text-warning"></span></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-2">邮箱验证</label>
+                                        <div class="col-sm-4">
+            <if condition="$info['status']==0">
+            <input type="button" value="测试发送" class="btn btn-info" onclick="sendmail()">
+            <else/>
+            <input type="button" value="邮箱验证已通过" class="btn btn-info">
+            </if>
+                                        </div>
+                                        <div class="col-sm-4"><span class="help-inline text-warning"></span></div>
+                                    </div>
+                                
+
+                            </div>
+                            <div class="box-footer">
+                            	<input type="hidden" name="act" value="{$act}">
+                                <input type="hidden" name="status" value="0">
+                            	<button type="reset" class="btn btn-primary"><i class="icon-ok"></i>重填  </button>                       	                 
+                                <button type="submit" class="btn btn-primary pull-right"><i class="icon-ok"></i>提交  </button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+    </div> 
+    <script type="text/javascript">
+var flag = true;
+function adsubmit(){
+	check_form();
+	if(flag){
+		$('#mailform').submit();
+	}
+}
+function sendmail(){
+	check_form();
+	if(flag){
+	$.ajax({
+		type : "post",
+		data : $('#mailform').serialize(),
+		dataType : 'json',
+		url : "{:U('Mail/send')}",
+		success : function(res){
+			if(res.status==1){
+				$("input[name='status']").val(1);
+				layer.msg(res.msg, {icon: 1});
+			}else{
+				$("input[name='status']").val(0);
+				layer.msg(res.msg, {icon: 2,time: 2000});
+			}
+		}
+	})
+	}
+}
+
+function check_form(){
+	if($('input[name="smtp_server"]').val() == ''){
+		layer.alert('请正确填写邮件发送服务器地址');
+		flag = false;
+		return;
+	}
+	if($('input[name="smtp_port"]').val() == ''){
+		layer.alert('请正确填写邮件发送服务器端口');
+		flag = false;
+		return;
+	}
+	if($('input[name="smtp_user"]').val() == '' || !checkEmail($('input[name="smtp_user"]').val())){
+		layer.alert('请正确填写正确的邮箱账号');
+		flag = false;
+		return;
+	}
+	if($('input[name="smtp_pwd"]').val() == ''){
+		layer.alert('请填写发送邮箱密码');
+		flag = false;
+		return;
+	}
+}
+    </script> 
+    </body>
+    </html>

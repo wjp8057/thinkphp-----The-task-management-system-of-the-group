@@ -1,0 +1,68 @@
+<include file="Static/min-header"/>
+<style type="text/css">
+.layui-laydate-main {
+    width: 100%;
+}
+.layui-laydate-content td, .layui-laydate-content th {
+    height: 10%;
+    font-size: 270%;
+    padding-left: 45px;
+    padding-right: 45px;
+}
+</style>
+<div class="wrapper">
+    <include file="Static/breadcrumb"/>
+    <section class="content" style="width: 100%;height: 100%;">
+      <div id="calendar" style="text-align: center;"></div>
+    </section>
+</div>
+<script type="text/javascript">
+layer.config({
+  extend: 'extend/layer.ext.js'
+});   
+var info = {$info};
+laydate.render({
+  elem: '#calendar'
+  ,theme: 'grid'
+  ,position: 'static'
+  ,mark: info
+  ,change: function(value, date){
+    var now_time = value;
+    $.ajax({
+      type : 'post',
+      async : false,
+      url : "{:U('Home/Work/ajaxwork')}",
+      data : {time:value},
+      dataType : 'json',
+      success : function(data,value){
+        console.log(data);
+        if(data){
+          layer.prompt({title: data.title+'工作内容', formType: 2,value: data.content,maxlength: 200}, function(con, index){
+          layer.close(index);
+          layer.prompt({title: data.title+'工作计划', formType: 2,value: data.plan,maxlength: 200}, function(plan, index){
+          layer.close(index);
+            $.ajax({
+            type : 'post',
+            async : false,
+            url : "{:U('Home/Work/ajaxhandlework')}",
+            data : {times:data.times,title:data.title,field:data.field,con:con,plan:plan},
+            dataType : 'json',
+            success : function(rel){
+              if(rel.status==1){
+                layer.alert(rel.msg, {icon: 1});
+                window.location.href = "{:U('Home/Work/worklog')}";
+              }
+              else layer.alert(rel.msg, {icon: 2});
+              
+            }
+            });
+          });
+        });
+        }
+      }
+    })
+  }
+});
+</script>
+</body>
+</html>
